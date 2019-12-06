@@ -29,8 +29,8 @@ const HIGHLIGHT_CLASS = "result-shortcut-highlight";
  * @param b Function that is the composition entry point.
  */
 function compose(a, b) {
-	return function(x) {
-		return a(b(x));
+	return function(...args) {
+		return a(b(...args));
 	};
 }
 
@@ -141,6 +141,8 @@ const getAEls = compose(getAElsFromBoxes, getFilteredResultsBoxes);
 
 /**
  * Provides an index modified class to the element for adding the index after element.
+ * 
+ * @param index The index modifier of the class.
  */
 function highlightIndexClass(index) {
 	return `${HIGHLIGHT_CLASS}--${index + 1}`;
