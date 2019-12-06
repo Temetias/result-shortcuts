@@ -140,6 +140,13 @@ const getHrefs = compose(getHrefsFromBoxes, getFilteredResultsBoxes);
 const getAEls = compose(getAElsFromBoxes, getFilteredResultsBoxes);
 
 /**
+ * Provides an index modified class to the element for adding the index after element.
+ */
+function highlightIndexClass(index) {
+	return `${HIGHLIGHT_CLASS}--${index + 1}`;
+}
+
+/**
  * Navigates to the provided href.
  *
  * @param href The href to navigate to.
@@ -153,8 +160,9 @@ function goToHref(href) {
  *
  * @param el The element to highlight.
  */
-function highlight(el) {
+function highlight(el, index) {
 	el.classList.add(HIGHLIGHT_CLASS);
+	el.classList.add(highlightIndexClass(index));
 }
 
 /**
@@ -162,8 +170,9 @@ function highlight(el) {
  *
  * @param el The element to remove the highlight from.
  */
-function removeHighlight(el) {
+function removeHighlight(el, index) {
 	el.classList.remove(HIGHLIGHT_CLASS);
+	el.classList.remove(highlightIndexClass(index));
 }
 
 /**

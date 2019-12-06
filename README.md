@@ -10,6 +10,5 @@ The file only gets loaded when the url matches `*://*.google.com/search?*`. On `
 ## Future plans
 1. Thorough testing / finalizing mvp solution
 2. Ship to extension stores
-3. Chrome and Brave support
-4. Customization options
-5. DuckDuckGo support
+3. Customization options
+4. DuckDuckGo support
