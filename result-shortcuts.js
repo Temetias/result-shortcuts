@@ -1,18 +1,26 @@
 /**
- * Mapping of keycodes to array result indexes. Key 1 is first index, key 2 is second, etc.
+ * Mapping of keycodes to array result indexes. Numkey 1 is first index, numkey 2 is second, etc.
  */
 const NUMBER_KEYS = Object.freeze({
-	code_49: 0,
-	code_50: 1,
-	code_51: 2,
-	code_52: 3,
-	code_53: 4,
+	49: 0,
+	50: 1,
+	51: 2,
+	52: 3,
+	53: 4,
+	54: 5,
+	55: 6,
+	56: 7,
 });
 
 /**
- * The key set to arm the functionality.
+ * The key set to arm the functionality. Default to "alt".
  */
 const COMMAND_KEY = 18;
+
+/**
+ * The CSS class providing the highlight efects.
+ */
+const HIGHLIGHT_CLASS = "result-shortcut-highlight";
 
 /**
  * Simple composition function. Returns the composition of a and b.
@@ -58,13 +66,16 @@ function getResultsBoxes() {
 const getFilteredResultsBoxes = compose(filterSpecialResultBoxes, getResultsBoxes);
 
 /**
- * Checks if an element has a class. Google search results have classes on all irrelevant links. This
- * provides us a reliable way to only target the result links.
+ * Checks if an element has a class (other than something inserted by this script).
+ * Google search results have classes on all irrelevant links. This provides us a reliable way
+ * to only target the result links.
  *
  * @param el Element to be checked for classes.
  */
 function hasNoClass(el) {
-	return el.getAttribute("class") === "" | el.getAttribute("class") === null;
+	return el.getAttribute("class") === ""
+		|| el.getAttribute("class") === null
+		|| el.getAttribute("class").includes(HIGHLIGHT_CLASS);
 }
 
 /**
@@ -143,7 +154,7 @@ function goToHref(href) {
  * @param el The element to highlight.
  */
 function highlight(el) {
-	el.style.border = "1px dotted tomato";
+	el.classList.add(HIGHLIGHT_CLASS);
 }
 
 /**
@@ -152,7 +163,7 @@ function highlight(el) {
  * @param el The element to remove the highlight from.
  */
 function removeHighlight(el) {
-	el.style.border = "";
+	el.classList.remove(HIGHLIGHT_CLASS);
 }
 
 /**
@@ -176,7 +187,7 @@ function removeAElHighlights() {
  * @param event The keyboardevent.
  */
 function onNumberPressed({ keyCode }) {
-	const keyIndex = NUMBER_KEYS[`code_${keyCode}`];
+	const keyIndex = NUMBER_KEYS[keyCode];
 	if (keyIndex !== undefined) {
 		const href = getHrefs()[keyIndex];
 		goToHref(href);
@@ -189,9 +200,9 @@ function onNumberPressed({ keyCode }) {
  * @param event The keyboardevent.
  */
 function onCommandKeyDown({ keyCode }) {
-	highlightAEls();
-	window.removeEventListener("keydown", onCommandKeyDown);
 	if (keyCode === COMMAND_KEY) {
+		highlightAEls();
+		window.removeEventListener("keydown", onCommandKeyDown);
 		window.addEventListener("keydown", onNumberPressed);
 	}
 }
@@ -202,9 +213,9 @@ function onCommandKeyDown({ keyCode }) {
  * @param event The keyboardevent.
  */
 function onCommandKeyUp({ keyCode }) {
-	removeAElHighlights();
-	window.addEventListener("keydown", onCommandKeyDown);
 	if (keyCode === COMMAND_KEY) {
+		removeAElHighlights();
+		window.addEventListener("keydown", onCommandKeyDown);
 		window.removeEventListener("keydown", onNumberPressed);
 	}
 }

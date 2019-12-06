@@ -1,0 +1,16 @@
+.result-shortcut-highlight {
+	border: 2px dotted tomato;
+	position: relative;
+}
+
+.result-shortcut-highlight::after {
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateX(-100%);
+}
+
+.result-shortcut-highlight-index-1 {
+	content: "1";
+}
