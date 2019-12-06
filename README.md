@@ -8,7 +8,6 @@ When viewing search results from google, hit `alt` + `1` to navigate to the firs
 The file only gets loaded when the url matches `*://*.google.com/search?*`. On `alt` press it reads the DOM, extracts the main result links and highlights them. An `[n]` press while holding `alt` navigates to the `[n]`th result.
 
 ## Future plans
-1. Thorough testing / finalizing mvp solution
-2. Ship to extension stores
-3. Customization options
-4. DuckDuckGo support
+1. Thorough testing
+2. Customization options
+3. DuckDuckGo support
