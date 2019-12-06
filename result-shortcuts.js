@@ -10,6 +10,11 @@ const NUMBER_KEYS = Object.freeze({
 });
 
 /**
+ * The key set to arm the functionality.
+ */
+const COMMAND_KEY = 18;
+
+/**
  * Simple composition function. Returns the composition of a and b.
  *
  * @param a Function that takes as parameter the result of b
@@ -22,11 +27,35 @@ function compose(a, b) {
 }
 
 /**
+ * Checks if the element has and only has the class "g". Helps us to filter out the google special
+ * suggestion boxes, etc.
+ *
+ * @param el The element to check.
+ */
+function hasOnlyGClass(el) {
+	return el.getAttribute("class") === "g";
+}
+
+/**
+ * Filters special suggestion boxes and other clutter away from search results.
+ *
+ * @param elCollection The search results element collection.
+ */
+function filterSpecialResultBoxes(elCollection) {
+	return Array.from(elCollection).filter(hasOnlyGClass)
+}
+
+/**
  * Gets the individual result boxes from google results. Targets only the actual results, not ads.
  */
 function getResultsBoxes() {
 	return document.getElementById("res").getElementsByClassName("g");
 }
+
+/**
+ * Gets the search results boxes with special boxes filtered out.
+ */
+const getFilteredResultsBoxes = compose(filterSpecialResultBoxes, getResultsBoxes);
 
 /**
  * Checks if an element has a class. Google search results have classes on all irrelevant links. This
@@ -48,15 +77,28 @@ function filterRelevantLinks(aCollection) {
 }
 
 /**
+ * Extracts an "a" element from a result box.
+ *
+ * @param result The search result box.
+ */
+function getAElFromResult(result) {
+	const aCollection = result.getElementsByTagName("a");
+	return filterRelevantLinks(aCollection)[0];
+}
+
+/**
+ * Gets the href from an "a" element.
+ */
+function getHrefFromAEl(a) {
+	return a.getAttribute("href");
+}
+
+/**
  * Extracts a href from the individual result component.
  *
  * @param result The result component containing the links and text related to the result.
  */
-function getHrefFromResult(result) {
-	const aCollection = result.getElementsByTagName("a");
-	const filtered = filterRelevantLinks(aCollection);
-	return filtered[0].getAttribute("href");
-}
+const getHrefFromResult = compose(getHrefFromAEl, getAElFromResult);
 
 /**
  * Extracts only hrefs from all the results, utilizing the functions above.
@@ -68,9 +110,23 @@ function getHrefsFromBoxes(results) {
 }
 
 /**
+ * Extracts only "a" elements from all the results, utilizing the functions above.
+ *
+ * @param rsults The search results
+ */
+function getAElsFromBoxes(results) {
+	return Array.from(results).map(getAElFromResult);
+}
+
+/**
  * Combination of getting the results and extracting the hrefs out of them.
  */
-const getHrefs = compose(getHrefsFromBoxes, getResultsBoxes);
+const getHrefs = compose(getHrefsFromBoxes, getFilteredResultsBoxes);
+
+/**
+ * Combination of getting the results and extracting the "a" elements out of them.
+ */
+const getAEls = compose(getAElsFromBoxes, getFilteredResultsBoxes);
 
 /**
  * Navigates to the provided href.
@@ -82,8 +138,40 @@ function goToHref(href) {
 }
 
 /**
+ * Highlights an element. Used to emphasize the items in the shortcutting
+ *
+ * @param el The element to highlight.
+ */
+function highlight(el) {
+	el.style.border = "1px dotted tomato";
+}
+
+/**
+ * Removes the highlight from the element.
+ *
+ * @param el The element to remove the highlight from.
+ */
+function removeHighlight(el) {
+	el.style.border = "";
+}
+
+/**
+ * Highlights the "a" elements in the shortcuts.
+ */
+function highlightAEls() {
+	getAEls().map(highlight);
+}
+
+/**
+ * Removes the highlights.
+ */
+function removeAElHighlights() {
+	getAEls().map(removeHighlight);
+}
+
+/**
  * Handles a number-key press. Navigates to the nth result of the number pressed.
- * Is used with combination of alt-key press and doesn't trigger without it.
+ * Is used with combination of command-key press and doesn't trigger without it.
  *
  * @param event The keyboardevent.
  */
@@ -96,29 +184,31 @@ function onNumberPressed({ keyCode }) {
 }
 
 /**
- * Handles the alt-key press. Arms the number-key functionality.
+ * Handles the command-key press. Arms the number-key functionality.
  *
  * @param event The keyboardevent.
  */
-function onAltDown({ keyCode }) {
-	window.removeEventListener("keydown", onAltDown);
-	if (keyCode === 18) {
+function onCommandKeyDown({ keyCode }) {
+	highlightAEls();
+	window.removeEventListener("keydown", onCommandKeyDown);
+	if (keyCode === COMMAND_KEY) {
 		window.addEventListener("keydown", onNumberPressed);
 	}
 }
 
 /**
- * Handles the alt-key release. Disarms the number-key functionality.
+ * Handles the command-key release. Disarms the number-key functionality.
  *
  * @param event The keyboardevent.
  */
-function onAltUp({ keyCode }) {
-	window.addEventListener("keydown", onAltDown);
-	if (keyCode === 18) {
+function onCommandKeyUp({ keyCode }) {
+	removeAElHighlights();
+	window.addEventListener("keydown", onCommandKeyDown);
+	if (keyCode === COMMAND_KEY) {
 		window.removeEventListener("keydown", onNumberPressed);
 	}
 }
 
 // Attach events.
-window.addEventListener("keydown", onAltDown);
-window.addEventListener("keyup", onAltUp);
+window.addEventListener("keydown", onCommandKeyDown);
+window.addEventListener("keyup", onCommandKeyUp);
