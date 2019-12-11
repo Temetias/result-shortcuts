@@ -9,8 +9,19 @@
 	"content_scripts": [
 		{
 			"matches": [ "*://*.google.com/search?*" ],
-			"js": [ "result-shortcuts.js" ],
-			"css": [ "result-shortcuts.css" ]
+			"js": [
+				"src/js/utils.js",
+				"src/js/google.js"
+			],
+			"css": [ "src/css/result-shortcuts.css" ]
+		},
+		{
+			"matches": [ "*://*.duckduckgo.com/?*" ],
+			"js": [
+				"src/js/utils.js",
+				"src/js/ddg.js"
+			],
+			"css": [ "src/css/result-shortcuts.css" ]
 		}
 	]
 }
