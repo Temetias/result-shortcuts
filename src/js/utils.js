@@ -1,5 +1,7 @@
 /**
  * Mapping of keycodes to array result indexes. Numkey 1 is first index, numkey 2 is second, etc.
+ * There's usually only 7-ish results and using numkeys 8-9-0 don't seem reasonable as a keyboard
+ * shortcut.
  */
 const NUMBER_KEYS = Object.freeze({
 	49: 0,
@@ -35,22 +37,14 @@ function compose(a, b) {
 }
 
 /**
+ * Filters special suggestion boxes and other clutter away from search results.
  * Checks if the element has and only has the class "g". Helps us to filter out the google special
  * suggestion boxes, etc.
- *
- * @param el The element to check.
- */
-function hasOnlyGClass(el) {
-	return el.getAttribute("class") === "g";
-}
-
-/**
- * Filters special suggestion boxes and other clutter away from search results.
  *
  * @param elCollection The search results element collection.
  */
 function filterSpecialResultBoxes(elCollection) {
-	return Array.from(elCollection).filter(hasOnlyGClass)
+	return Array.from(elCollection).filter(el => el.getAttribute("class") === "g");
 }
 
 /**
@@ -79,22 +73,13 @@ function hasNoClass(el) {
 }
 
 /**
- * Filters only the relevant "a" elements from a collection based on the class existence check.
- *
- * @param aCollection Collection of a elements.
- */
-function filterRelevantLinks(aCollection) {
-	return Array.from(aCollection).filter(hasNoClass);
-}
-
-/**
  * Extracts an "a" element from a result box.
  *
  * @param result The search result box.
  */
 function getAElFromResult(result) {
-	const aCollection = result.getElementsByTagName("a");
-	return filterRelevantLinks(aCollection)[0];
+	return Array.from(result.getElementsByTagName("a"))
+		.filter(hasNoClass)[0]
 }
 
 /**
@@ -178,20 +163,6 @@ function removeHighlight(el, index) {
 }
 
 /**
- * Highlights the "a" elements in the shortcuts.
- */
-function highlightAEls() {
-	getAEls().map(highlight);
-}
-
-/**
- * Removes the highlights.
- */
-function removeAElHighlights() {
-	getAEls().map(removeHighlight);
-}
-
-/**
  * Handles a number-key press. Navigates to the nth result of the number pressed.
  * Is used with combination of command-key press and doesn't trigger without it.
  *
@@ -212,7 +183,7 @@ function onNumberPressed({ keyCode }) {
  */
 function onCommandKeyDown({ keyCode }) {
 	if (keyCode === COMMAND_KEY) {
-		highlightAEls();
+		getAEls().map(highlight);
 		window.removeEventListener("keydown", onCommandKeyDown);
 		window.addEventListener("keydown", onNumberPressed);
 	}
@@ -225,7 +196,7 @@ function onCommandKeyDown({ keyCode }) {
  */
 function onCommandKeyUp({ keyCode }) {
 	if (keyCode === COMMAND_KEY) {
-		removeAElHighlights();
+		getAEls().map(removeHighlight);
 		window.addEventListener("keydown", onCommandKeyDown);
 		window.removeEventListener("keydown", onNumberPressed);
 	}
