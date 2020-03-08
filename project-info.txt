@@ -1,2 +1,2 @@
 Result shortcuts is a simple browser extension, providing keyboard shortcuts to Google search results. There used to be a similar extension available but for some reason it disappeared from the add-on stores, so I created a similar extension. The idea is simple: Remove the tedious part of reaching for your mouse when searching from the web by providing the results with alt + [nth result] -combo.
-#link#{ title: "Firefox Browser Add-ons", href: "https://addons.mozilla.org/fi/firefox/addon/result-shortcuts/" }
+#link#{ "title": "Firefox Browser Add-ons", "href": "https://addons.mozilla.org/fi/firefox/addon/result-shortcuts/" }
