@@ -2,14 +2,14 @@
  * Mapping of keycodes to array result indexes. Numkey 1 is first index, numkey 2 is second, etc.
  */
 const NUMBER_KEYS = Object.freeze({
-	49: 0,
-	50: 1,
-	51: 2,
-	52: 3,
-	53: 4,
-	54: 5,
-	55: 6,
-	56: 7,
+  49: 0,
+  50: 1,
+  51: 2,
+  52: 3,
+  53: 4,
+  54: 5,
+  55: 6,
+  56: 7,
 });
 
 /**
@@ -29,9 +29,9 @@ const HIGHLIGHT_CLASS = "result-shortcut-highlight";
  * @param b Function that is the composition entry point.
  */
 function compose(a, b) {
-	return function(...args) {
-		return a(b(...args));
-	};
+  return function (...args) {
+    return a(b(...args));
+  };
 }
 
 /**
@@ -41,7 +41,7 @@ function compose(a, b) {
  * @param el The element to check.
  */
 function hasOnlyGClass(el) {
-	return el.getAttribute("class") === "g";
+  return el.getAttribute("class") === "g";
 }
 
 /**
@@ -50,14 +50,14 @@ function hasOnlyGClass(el) {
  * @param elCollection The search results element collection.
  */
 function filterSpecialResultBoxes(elCollection) {
-	return Array.from(elCollection).filter(hasOnlyGClass)
+  return Array.from(elCollection).filter(hasOnlyGClass)
 }
 
 /**
  * Gets the individual result boxes from google results. Targets only the actual results, not ads.
  */
 function getResultsBoxes() {
-	return document.getElementById("res").getElementsByClassName("g");
+  return document.getElementById("res").getElementsByClassName("g");
 }
 
 /**
@@ -73,9 +73,9 @@ const getFilteredResultsBoxes = compose(filterSpecialResultBoxes, getResultsBoxe
  * @param el Element to be checked for classes.
  */
 function hasNoClass(el) {
-	return el.getAttribute("class") === ""
-		|| el.getAttribute("class") === null
-		|| el.getAttribute("class").includes(HIGHLIGHT_CLASS);
+  return el.getAttribute("class") === ""
+    || el.getAttribute("class") === null
+    || el.getAttribute("class").includes(HIGHLIGHT_CLASS);
 }
 
 /**
@@ -84,7 +84,7 @@ function hasNoClass(el) {
  * @param aCollection Collection of a elements.
  */
 function filterRelevantLinks(aCollection) {
-	return Array.from(aCollection).filter(hasNoClass);
+  return Array.from(aCollection).filter(hasNoClass);
 }
 
 /**
@@ -93,15 +93,15 @@ function filterRelevantLinks(aCollection) {
  * @param result The search result box.
  */
 function getAElFromResult(result) {
-	const aCollection = result.getElementsByTagName("a");
-	return filterRelevantLinks(aCollection)[0];
+  const aCollection = result.getElementsByTagName("a");
+  return filterRelevantLinks(aCollection)[0];
 }
 
 /**
  * Gets the href from an "a" element.
  */
 function getHrefFromAEl(a) {
-	return a.getAttribute("href");
+  return a.getAttribute("href");
 }
 
 /**
@@ -117,7 +117,7 @@ const getHrefFromResult = compose(getHrefFromAEl, getAElFromResult);
  * @param results The search results.
  */
 function getHrefsFromBoxes(results) {
-	return Array.from(results).map(getHrefFromResult);
+  return Array.from(results).map(getHrefFromResult);
 }
 
 /**
@@ -126,7 +126,7 @@ function getHrefsFromBoxes(results) {
  * @param rsults The search results
  */
 function getAElsFromBoxes(results) {
-	return Array.from(results).map(getAElFromResult);
+  return Array.from(results).map(getAElFromResult);
 }
 
 /**
@@ -145,7 +145,7 @@ const getAEls = compose(getAElsFromBoxes, getFilteredResultsBoxes);
  * @param index The index modifier of the class.
  */
 function highlightIndexClass(index) {
-	return `${HIGHLIGHT_CLASS}--${index + 1}`;
+  return `${HIGHLIGHT_CLASS}--${index + 1}`;
 }
 
 /**
@@ -154,7 +154,7 @@ function highlightIndexClass(index) {
  * @param href The href to navigate to.
  */
 function goToHref(href) {
-	window.location.href = href;
+  window.location.href = href;
 }
 
 /**
@@ -163,8 +163,8 @@ function goToHref(href) {
  * @param el The element to highlight.
  */
 function highlight(el, index) {
-	el.classList.add(HIGHLIGHT_CLASS);
-	el.classList.add(highlightIndexClass(index));
+  el.classList.add(HIGHLIGHT_CLASS);
+  el.classList.add(highlightIndexClass(index));
 }
 
 /**
@@ -173,22 +173,22 @@ function highlight(el, index) {
  * @param el The element to remove the highlight from.
  */
 function removeHighlight(el, index) {
-	el.classList.remove(HIGHLIGHT_CLASS);
-	el.classList.remove(highlightIndexClass(index));
+  el.classList.remove(HIGHLIGHT_CLASS);
+  el.classList.remove(highlightIndexClass(index));
 }
 
 /**
  * Highlights the "a" elements in the shortcuts.
  */
 function highlightAEls() {
-	getAEls().map(highlight);
+  getAEls().map(highlight);
 }
 
 /**
  * Removes the highlights.
  */
 function removeAElHighlights() {
-	getAEls().map(removeHighlight);
+  getAEls().map(removeHighlight);
 }
 
 /**
@@ -198,11 +198,11 @@ function removeAElHighlights() {
  * @param event The keyboardevent.
  */
 function onNumberPressed({ keyCode }) {
-	const keyIndex = NUMBER_KEYS[keyCode];
-	if (keyIndex !== undefined) {
-		const href = getHrefs()[keyIndex];
-		goToHref(href);
-	}
+  const keyIndex = NUMBER_KEYS[keyCode];
+  if (keyIndex !== undefined) {
+    const href = getHrefs()[keyIndex];
+    goToHref(href);
+  }
 }
 
 /**
@@ -211,11 +211,11 @@ function onNumberPressed({ keyCode }) {
  * @param event The keyboardevent.
  */
 function onCommandKeyDown({ keyCode }) {
-	if (keyCode === COMMAND_KEY) {
-		highlightAEls();
-		window.removeEventListener("keydown", onCommandKeyDown);
-		window.addEventListener("keydown", onNumberPressed);
-	}
+  if (keyCode === COMMAND_KEY) {
+    highlightAEls();
+    window.removeEventListener("keydown", onCommandKeyDown);
+    window.addEventListener("keydown", onNumberPressed);
+  }
 }
 
 /**
@@ -224,11 +224,11 @@ function onCommandKeyDown({ keyCode }) {
  * @param event The keyboardevent.
  */
 function onCommandKeyUp({ keyCode }) {
-	if (keyCode === COMMAND_KEY) {
-		removeAElHighlights();
-		window.addEventListener("keydown", onCommandKeyDown);
-		window.removeEventListener("keydown", onNumberPressed);
-	}
+  if (keyCode === COMMAND_KEY) {
+    removeAElHighlights();
+    window.addEventListener("keydown", onCommandKeyDown);
+    window.removeEventListener("keydown", onNumberPressed);
+  }
 }
 
 // Attach events.
