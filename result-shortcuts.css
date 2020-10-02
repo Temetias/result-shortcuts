@@ -1,44 +1,44 @@
 .result-shortcut-highlight {
-	border: 2px dotted tomato;
-	position: relative;
+  border: 2px dotted tomato;
+  position: relative;
 }
 
 .result-shortcut-highlight::after {
-	display: block;
-	position: absolute;
-	left: 0;
-	top: 50%;
-	width: 3rem;
-	font-size: 1.3rem;
-	color: tomato;
-	transform: translateX(-100%);
-	z-index: 10;
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3rem;
+  font-size: 1.3rem;
+  color: tomato;
+  transform: translateX(-100%);
+  z-index: 10;
 }
 
 .result-shortcut-highlight.result-shortcut-highlight--1::after {
-	content: "1";
+  content: "1";
 }
 
 .result-shortcut-highlight.result-shortcut-highlight--2::after {
-	content: "2";
+  content: "2";
 }
 
 .result-shortcut-highlight.result-shortcut-highlight--3::after {
-	content: "3";
+  content: "3";
 }
 
 .result-shortcut-highlight.result-shortcut-highlight--4::after {
-	content: "4";
+  content: "4";
 }
 
 .result-shortcut-highlight.result-shortcut-highlight--5::after {
-	content: "5";
+  content: "5";
 }
 
 .result-shortcut-highlight.result-shortcut-highlight--6::after {
-	content: "6";
+  content: "6";
 }
 
 .result-shortcut-highlight.result-shortcut-highlight--7::after {
-	content: "7";
+  content: "7";
 }
